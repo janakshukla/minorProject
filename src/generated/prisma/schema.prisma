@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  email     String   @unique
+  password  String
+  role      Role
+  createdAt DateTime @default(now())
+}
+
+model Child {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  deviceId  String
+  parentId  String
+  createdAt DateTime @default(now())
+}
+
+model UsageLog {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  appName   String
+  childId   String
+  duration  Int
+  timestamp DateTime
+}
+
+model Location {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  childId   String
+  latitude  Float
+  longitude Float
+  timestamp DateTime
+}
+
+model LockStatus {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  childId        String
+  locked         Boolean
+  untiltimestamp DateTime
+}
+
+enum Role {
+  parent
+  child
+}
