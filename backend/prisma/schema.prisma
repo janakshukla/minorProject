@@ -26,6 +26,7 @@ model User {
   name      String
   email     String  @unique
   parentId String
+  pushToken String?
   createdAt DateTime @default(now())
  }
  model SOSAlert {
@@ -42,15 +43,6 @@ model User {
     longitude Float
     timestamp DateTime 
   }
-  model Notification {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  childId   String
-  title     String
-  body      String
-  time      DateTime
-  sent      Boolean  @default(false)
-}
-
 model GeoFence {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   childId   String

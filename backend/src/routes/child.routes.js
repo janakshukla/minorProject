@@ -4,8 +4,8 @@ import { Router } from "express";
 const router = Router()
 
 router.post("/addchild", async (req, res) => {
-    const { email, name, parentId } = req.body;
-    if (!email || !name || !parentId) {
+    const { email, name, parentId,pushtoken } = req.body;
+    if (!email || !name || !parentId|| !pushtoken) {
         return res.status(400).json({ error: "Email parentid and name are required." });
     }
     const user = await db.user.findUnique({
@@ -31,7 +31,8 @@ router.post("/addchild", async (req, res) => {
                 id: user.id,
                 name: name,
                 email: email,
-                parentId: parentId
+                parentId: parentId,
+                pushtoken: pushtoken,
             },
         });
         return res.status(201).json({ message: "Child added successfully", child });
@@ -77,5 +78,18 @@ router.get("/getlocation/:childId", async (req, res) => {
     }
 }
 )
+router.get("/api/geofence/:childId", async (req, res) => {
+    const { childId } = req.params;
+  
+    try {
+      const geofences = await db.geoFence.findMany({
+        where: { childId },
+      });
+      res.json(geofences);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Failed to fetch geofences" });
+    }
+  });
 
 export default router;
