@@ -44,15 +44,15 @@ router.post("/usage", async (req, res) => {
     }
 });
 router.post("/calllog", async (req, res) => {
-    const {childId,callerid,duration,timestamp} = req.body
-    if (!childId || !callerid || !duration || !timestamp) {
+    const {childId,callerId,duration,timestamp} = req.body
+    if (!childId || !callerId || !duration || !timestamp) {
         return res.status(400).json({ message: "All fields are required" });
     }
     try {
         await db.callLog.create({
             data: {
                 childId,
-                callerid,
+                callerId,
                 duration,
                 timestamp
             }
