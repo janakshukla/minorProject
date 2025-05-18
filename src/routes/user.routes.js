@@ -1,7 +1,7 @@
 import { Router } from "express";
 import bcrypt from "bcrypt";
 import db from "../../prisma/index.js";
-import * as jwt from "jsonwebtoken";
+
 
 const router = Router()
 
@@ -37,4 +37,24 @@ router.post("/register", async (req, res) => {
     }
 })
 
+router.post("/login", async (req, res) => {
+    const { email, password } = req.body;
+    if (!email || !password) {
+        return res.status(400).json({ message: "Please fill all fields" });
+    }
+    const user = await db.user.findFirst({
+        where: {
+            email: email
+        }
+    });
+    if (!user) {
+        return res.status(401).json({ message: "Invalid credentials" });
+    }
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    if (!isValidPassword) {
+        return res.status(401).json({ message: "Invalid credentials" });
+    }
+    delete user.password;
+    return res.status(200).json({ message: "Login successful", user: user });
+})
 export default router;
