@@ -28,13 +28,13 @@ model User {
   parentId String
   createdAt DateTime @default(now())
  }
-  model UsageLog {
-    id        String   @id @default(auto()) @map("_id") @db.ObjectId
-    appName   String
-    childId   String 
-    duration Int
-    timestamp DateTime 
-  }
+ model SOSAlert {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  childId   String
+  latitude  Float
+  longitude Float
+  timestamp DateTime
+}
   model Location {
     id        String   @id @default(auto()) @map("_id") @db.ObjectId
     childId   String
@@ -42,13 +42,25 @@ model User {
     longitude Float
     timestamp DateTime 
   }
-  model CallLog {
-    id        String   @id @default(auto()) @map("_id") @db.ObjectId
-    childId   String
-    callerId  String
-    duration  Int
-    timestamp DateTime 
-  }
+  model Notification {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  childId   String
+  title     String
+  body      String
+  time      DateTime
+  sent      Boolean  @default(false)
+}
+
+model GeoFence {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  childId   String
+  latitude  Float
+  longitude Float
+  radius    Float    // in meters
+  name      String
+  createdAt DateTime @default(now())
+}
+
   enum Role {
   parent 
   child
