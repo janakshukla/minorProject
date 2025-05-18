@@ -42,12 +42,6 @@ model User {
     longitude Float
     timestamp DateTime 
   }
-  model LockStatus {
-    id        String   @id @default(auto()) @map("_id") @db.ObjectId
-    childId   String
-    locked    Boolean
-    untiltimestamp DateTime 
-  }
   model CallLog {
     id        String   @id @default(auto()) @map("_id") @db.ObjectId
     childId   String
