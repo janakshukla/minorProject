@@ -24,7 +24,7 @@ model User {
  model Child {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String
-  deviceId String
+  email     String  @unique
   parentId String
   createdAt DateTime @default(now())
  }
