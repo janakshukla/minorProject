@@ -23,45 +23,25 @@ router.post("/location", async (req, res) => {
     }
 }
 );
-router.post("/usage", async (req, res) => {
-    const {childId,appName,duration} = req.body
-    if (!childId || !appName || !duration) {
+router.post("/sosalert", async (req, res) => {
+    const {childId,latitude,longitude} = req.body
+    if (!childId || !latitude || !longitude) {
         return res.status(400).json({ message: "All fields are required" });
     }
     try {
-        await db.usageLog.create({
+        await db.sOSAlert.create({
             data: {
                 childId,
-                appName,
-                duration,
+                latitude,
+                longitude,
                 timestamp:Date.now()
             }
         })
-        return res.status(200).json({ message: "Usage added successfully" });
+        return res.status(200).json({ message: "SOS Alert added successfully" });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Internal server error" });
     }
-});
-router.post("/calllog", async (req, res) => {
-    const {childId,callerId,duration,timestamp} = req.body
-    if (!childId || !callerId || !duration || !timestamp) {
-        return res.status(400).json({ message: "All fields are required" });
-    }
-    try {
-        await db.callLog.create({
-            data: {
-                childId,
-                callerId,
-                duration,
-                timestamp
-            }
-        })
-        return res.status(200).json({ message: "Call log added successfully" });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: "Internal server error" });
-    }
-});
-
+}
+)
 export default router;

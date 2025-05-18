@@ -59,50 +59,23 @@ router.get("/getallchild/:parentId", async (req, res) => {
     }
 }
 );
-router.get("/getchildreport/:childId", async (req, res) => {
+router.get("/getlocation/:childId", async (req, res) => {
     const { childId } = req.params;
     if (!childId) {
         return res.status(400).json({ error: "Child ID is required." });
     }
 
     try {
-        const child = await db.child.findUnique({
-            where: {
-                id: childId,
-            },
-        });
-        if (!child) {
-            return res.status(404).json({ error: "Child not found" });
-        }
-        const UsageLog= await db.usageLog.findMany({
+        const location = await db.location.findMany({
             where: {
                 childId: childId,
             },
         });
-        const CallLog= await db.callLog.findMany({
-            where: {
-                childId: childId,
-            },
-        });
-        const lastlocation= await db.location.findFirst({
-            where: {
-                childId: childId,
-            },
-            orderBy: {
-                timestamp: 'desc',
-            },
-        });
-        const report = {
-            child: child.name,
-            usageLog: UsageLog,
-            callLog: CallLog,
-            lastlocation: lastlocation
-        };
-        return res.status(200).json(report);
+        return res.status(200).json(location);
     } catch (error) {
         return res.status(500).json({ error: "Internal server error" });
     }
-})
-
+}
+)
 
 export default router;
