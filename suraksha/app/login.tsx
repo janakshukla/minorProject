@@ -35,7 +35,7 @@ export default function Login() {
       setisLoading(true);
       setError(null);
       setisLoading(true);
-      const res = await axios.post("https://g9ht15nh-3000.inc1.devtunnels.ms/api/login", {
+      const res = await axios.post("https://minorproject-40ef.onrender.com/api/login", {
         email,
         password,
       });

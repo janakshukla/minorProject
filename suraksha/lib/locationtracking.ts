@@ -15,7 +15,7 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
     const location = locations[0];
     try {
       const childId = useUserStore().user?.id 
-      await fetch('https://your-api.com/api/location', {
+      await fetch('https://minorproject-40ef.onrender.com/api/childdata/location', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

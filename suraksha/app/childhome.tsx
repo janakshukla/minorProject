@@ -18,7 +18,7 @@ export default function ChildHome() {
       accuracy: Location.Accuracy.High,
     });
     try {
-      await axios.post('https://your-endpoint.com/sos', {
+      await axios.post('https://minorproject-40ef.onrender.com/api/childdata/sosalert', {
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
         timestamp: new Date().toISOString(),

@@ -27,7 +27,7 @@ export default function Home() {
     }
 
     try {
-      const response = await axios.post("https://g9ht15nh-3000.inc1.devtunnels.ms/api/child/addchild", {
+      const response = await axios.post("https://minorproject-40ef.onrender.com/api/child/addchild", {
         email: childEmail,
         parentId: user?.id,
       });
@@ -48,7 +48,7 @@ export default function Home() {
   const fetchChildren = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`https://g9ht15nh-3000.inc1.devtunnels.ms/api/child/getallchild/${user?.id}`);
+      const response = await axios.get(`https://minorproject-40ef.onrender.com/api/child/getallchild/${user?.id}`);
       setChildren(response.data);
     } catch (error) {
       console.error("Error fetching children:", error);

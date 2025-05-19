@@ -43,7 +43,7 @@ export default function Register() {
     try {
       setError(null);
       setisLoading(true);
-      const res =  await axios.post('https://g9ht15nh-3000.inc1.devtunnels.ms/api/register', {
+      const res =  await axios.post('https://minorproject-40ef.onrender.com/api/register', {
         username,
         email,
         password,

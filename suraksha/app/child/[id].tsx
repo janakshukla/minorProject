@@ -30,7 +30,7 @@ export default function ChildLocation() {
   const fetchChildLocation = async () => {
     try {
       const response = await axios.get(
-        `https://your-backend-url.com/api/child/getlocation/${childId}`
+        `https://minorproject-40ef.onrender.com/api/child/getlocation/${childId}`
       );
       setLocations(response.data);
     } catch (error) {
@@ -49,7 +49,7 @@ export default function ChildLocation() {
 
     try {
       const response = await axios.post(
-        `https://your-backend-url.com/api/child/sendnotification`,
+        `https://minorproject-40ef.onrender.com/api/childdata/sendnotification`,
         {
           childId,
           title,
