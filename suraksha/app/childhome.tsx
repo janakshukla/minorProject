@@ -1,4 +1,4 @@
-import { View, Text, Button, Alert } from 'react-native';
+import { View, Text, Alert, TouchableOpacity } from 'react-native';
 import React, { useEffect } from 'react';
 import axios from 'axios';
 import * as Location from 'expo-location';
@@ -8,7 +8,6 @@ import { startBackgroundLocationTracking } from '@/lib/locationtracking';
 export default function ChildHome() {
   const { user } = useUserStore(); // Extract user object from the store
 
-  // Function to handle SOS button press
   const handleSOS = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
@@ -21,8 +20,8 @@ export default function ChildHome() {
     try {
       await axios.post('https://your-endpoint.com/sos', {
         latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-      timestamp: new Date().toISOString(),
+        longitude: location.coords.longitude,
+        timestamp: new Date().toISOString(),
       });
       Alert.alert('SOS Sent', 'Your SOS alert has been sent successfully.');
     } catch (error) {
@@ -31,15 +30,20 @@ export default function ChildHome() {
     }
   };
 
-  // Start background location tracking
   useEffect(() => {
     startBackgroundLocationTracking();
   }, []);
 
   return (
-    <View>
-      <Text>Child Home</Text>
-      <Button title="SOS" onPress={handleSOS} />
+    <View className="flex-1 items-center justify-center bg-white px-6">
+      <Text className="text-2xl font-bold text-gray-800 mb-6">Child Home</Text>
+
+      <TouchableOpacity
+        onPress={handleSOS}
+        className="bg-red-600 px-6 py-3 rounded-xl shadow-lg active:opacity-80"
+      >
+        <Text className="text-white font-semibold text-lg">🚨 Send SOS</Text>
+      </TouchableOpacity>
     </View>
   );
 }

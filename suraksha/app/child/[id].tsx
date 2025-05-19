@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { View, Text, TextInput, Button, ActivityIndicator, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  ActivityIndicator,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import axios from "axios";
 import { useRouter, useLocalSearchParams } from "expo-router";
@@ -9,12 +16,12 @@ export interface Location {
   childId: string;
   latitude: number;
   longitude: number;
-  timestamp: string; // ISO string
+  timestamp: string;
 }
 
 export default function ChildLocation() {
   const router = useRouter();
-  const { childId } = useLocalSearchParams(); // Get childId from the route params
+  const { childId } = useLocalSearchParams();
   const [locations, setLocations] = useState<Location[]>([]);
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState("");
@@ -22,8 +29,10 @@ export default function ChildLocation() {
 
   const fetchChildLocation = async () => {
     try {
-      const response = await axios.get(`https://your-backend-url.com/api/child/getlocation/${childId}`);
-      setLocations(response.data); // Set the location data
+      const response = await axios.get(
+        `https://your-backend-url.com/api/child/getlocation/${childId}`
+      );
+      setLocations(response.data);
     } catch (error) {
       console.error("Error fetching child location:", error);
       Alert.alert("Error", "Failed to fetch child location.");
@@ -39,11 +48,14 @@ export default function ChildLocation() {
     }
 
     try {
-      const response = await axios.post(`https://your-backend-url.com/api/child/sendnotification`, {
-        childId,
-        title,
-        body,
-      });
+      const response = await axios.post(
+        `https://your-backend-url.com/api/child/sendnotification`,
+        {
+          childId,
+          title,
+          body,
+        }
+      );
       Alert.alert("Success", "Notification sent successfully!");
     } catch (error) {
       console.error("Error sending notification:", error);
@@ -57,22 +69,22 @@ export default function ChildLocation() {
 
   if (loading) {
     return (
-      <View className="flex-1 items-center justify-center">
-        <ActivityIndicator size="large" color="#0000ff" />
+      <View className="flex-1 items-center justify-center bg-white">
+        <ActivityIndicator size="large" color="#2563eb" />
       </View>
     );
   }
 
   if (locations.length === 0) {
     return (
-      <View className="flex-1 items-center justify-center">
-        <Text>No location data available for this child.</Text>
+      <View className="flex-1 items-center justify-center bg-white">
+        <Text className="text-gray-500 text-base">No location data available for this child.</Text>
       </View>
     );
   }
 
   return (
-    <View className="flex-1">
+    <View className="flex-1 bg-white">
       <MapView
         style={{ flex: 1 }}
         initialRegion={{
@@ -90,38 +102,33 @@ export default function ChildLocation() {
               longitude: location.longitude,
             }}
             title={`Location ${index + 1}`}
-            description={`Timestamp: ${new Date(location.timestamp).toLocaleString()}`}
+            description={`Timestamp: ${new Date(
+              location.timestamp
+            ).toLocaleString()}`}
           />
         ))}
       </MapView>
 
       {/* Notification Form */}
-      <View style={{ padding: 16 }}>
+      <View className="p-4 bg-gray-100 rounded-t-2xl shadow-lg">
         <TextInput
           placeholder="Enter Notification Title"
           value={title}
           onChangeText={setTitle}
-          style={{
-            borderWidth: 1,
-            borderColor: "#ccc",
-            padding: 8,
-            marginBottom: 8,
-            borderRadius: 4,
-          }}
+          className="border border-gray-300 rounded-lg px-4 py-2 mb-3 bg-white text-base"
         />
         <TextInput
           placeholder="Enter Notification Body"
           value={body}
           onChangeText={setBody}
-          style={{
-            borderWidth: 1,
-            borderColor: "#ccc",
-            padding: 8,
-            marginBottom: 8,
-            borderRadius: 4,
-          }}
+          className="border border-gray-300 rounded-lg px-4 py-2 mb-3 bg-white text-base"
         />
-        <Button title="Send Notification" onPress={sendNotification} />
+        <TouchableOpacity
+          onPress={sendNotification}
+          className="bg-blue-600 rounded-lg py-3 items-center"
+        >
+          <Text className="text-white font-semibold text-base">Send Notification</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
