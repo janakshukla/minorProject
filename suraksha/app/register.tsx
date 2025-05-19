@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, ActivityIndicator } from 'react-native';
 import { Link, router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useUserStore } from '@/store/userstore';
 import { Lock, Mail, User, Eye, EyeOff } from 'lucide-react-native';
 import axios from 'axios';
+import { registerForPushNotificationsAsync } from '@/lib/notifications';
 
 export default function Register() {
   const [username, setUsername] = useState('');
@@ -15,8 +16,17 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setisLoading] = useState(false);
+  const [pushtoken, setpushtoken] = useState("")
 
   const{setUser}=useUserStore((state) => (state));
+  useEffect(() => {
+    (async () => {
+      const token = await registerForPushNotificationsAsync();
+      if (token) {
+       setpushtoken(token);
+      }
+    })();
+  }, []);
 
 
   const handleRegister = async () => {
@@ -38,13 +48,14 @@ export default function Register() {
         email,
         password,
         role,
+        pushtoken
       });
 
        setUser(res.data.user);
        console.log(res.data.user);
-       router.replace("/")
-
-      setisLoading(false);
+       setisLoading(false);
+       router.push('/home');
+       
     } catch (err: any) {
       setError(err.message || 'Registration failed. Please try again.');
     }

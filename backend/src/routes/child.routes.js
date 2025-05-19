@@ -4,8 +4,8 @@ import { Router } from "express";
 const router = Router()
 
 router.post("/addchild", async (req, res) => {
-    const { email, name, parentId,pushtoken } = req.body;
-    if (!email || !name || !parentId|| !pushtoken) {
+    const { email, parentId} = req.body;
+    if (!email ||  !parentId) {
         return res.status(400).json({ error: "Email parentid and name are required." });
     }
     const user = await db.user.findUnique({
@@ -29,10 +29,10 @@ router.post("/addchild", async (req, res) => {
         const child = await db.child.create({
             data: {
                 id: user.id,
-                name: name,
+                name:user.name,
                 email: email,
                 parentId: parentId,
-                pushtoken: pushtoken,
+                pushtoken: user.pushToken,
             },
         });
         return res.status(201).json({ message: "Child added successfully", child });

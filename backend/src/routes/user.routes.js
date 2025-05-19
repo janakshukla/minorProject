@@ -6,9 +6,9 @@ import db from "../../prisma/index.js";
 const router = Router()
 
 router.post("/register", async (req, res) => {
-    const { username, email, password, role } = req.body;
+    const { username, email, password, role,pushtoken } = req.body;
     console.log(req.body);
-    if (!username || !email || !password || !role) {
+    if (!username || !email || !password || !role|| !pushtoken) {
         return res.status(400).json({ message: "Please fill all fields" });
     }
     const existinguser = await db.user.findFirst({
@@ -19,6 +19,7 @@ router.post("/register", async (req, res) => {
     if (existinguser) {
         return res.status(501).json({ message: "User already exists" });
     }
+   
     const hashedPassword = await bcrypt.hash(password, 10);
     try {
         const user = await db.user.create({
@@ -26,7 +27,8 @@ router.post("/register", async (req, res) => {
                 name: username,
                 email: email,
                 password: hashedPassword,
-                role: role
+                role: role,
+                pushToken: pushtoken,
             }
         });
         delete user.password;

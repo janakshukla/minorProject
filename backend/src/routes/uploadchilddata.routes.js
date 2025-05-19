@@ -42,12 +42,17 @@ router.post("/sosalert", async (req, res) => {
                 id: childId,
             },
         });
+        const parent = await db.user.findUnique({
+            where: {
+                id: child.parentId,
+            },
+        });
         const message = {
-            to: child.pushToken,
+            to: parent.pushToken,
             sound: 'default',
             title: "emergency SOS Alert",
             body: sosalert,
-            data: { withSome: 'data' },
+            data: { withSome: 'emergency alert' },
           };
       
           await fetch("https://exp.host/--/api/v2/push/send", {
@@ -102,7 +107,7 @@ router.post("/sendnotification", async (req, res) => {
     }
 }
 );
-router.post("/api/geofence", async (req, res) => {
+router.post("/geofence", async (req, res) => {
     const { childId, latitude, longitude, radius, name } = req.body;
   
     try {

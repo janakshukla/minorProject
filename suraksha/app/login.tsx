@@ -1,22 +1,32 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, KeyboardAvoidingView, Platform, ScrollView, ActivityIndicator } from 'react-native';
-import { Link } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useUserStore } from '@/store/userstore';
-import { Lock, Mail, Eye, EyeOff } from 'lucide-react-native';
-import axios from 'axios';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
+import { Link, router } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useUserStore } from "@/store/userstore";
+import { Lock, Mail, Eye, EyeOff } from "lucide-react-native";
+import axios from "axios";
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setisLoading] = useState(false);
-  const {setUser} = useUserStore((state) => state);
+  const { setUser } = useUserStore((state) => state);
 
   const handleLogin = async () => {
     if (!email || !password) {
-      setError('Please fill in all fields');
+      setError("Please fill in all fields");
       return;
     }
 
@@ -25,23 +35,25 @@ export default function Login() {
       setisLoading(true);
       setError(null);
       setisLoading(true);
-      const res =  await axios.post('https://localhost:3000/api/login', {
+      const res = await axios.post("https://g9ht15nh-3000.inc1.devtunnels.ms/api/login", {
         email,
-        password,  
+        password,
       });
 
-       setUser(res.data.user);
-
+      setUser(res.data.user);
       setisLoading(false);
+      router.push("/home");
     } catch (err: any) {
-      setError(err.message || 'Failed to sign in. Please check your credentials.');
+      setError(
+        err.message || "Failed to sign in. Please check your credentials."
+      );
     }
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.flexGrow}
       >
         <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -52,7 +64,9 @@ export default function Login() {
 
           <View style={styles.formContainer}>
             <Text style={styles.title}>Sign In</Text>
-            <Text style={styles.subtitle}>Welcome back! Please enter your details</Text>
+            <Text style={styles.subtitle}>
+              Welcome back! Please enter your details
+            </Text>
 
             {error && (
               <View style={styles.errorContainer}>
@@ -123,7 +137,7 @@ export default function Login() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: "#f8f9fa",
   },
   flexGrow: {
     flex: 1,
@@ -134,103 +148,103 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   headerContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 40,
     marginBottom: 32,
   },
   headerTitle: {
-    fontFamily: 'Inter-Bold',
+    fontFamily: "Inter-Bold",
     fontSize: 32,
-    color: '#2563eb',
+    color: "#2563eb",
   },
   headerSubtitle: {
-    fontFamily: 'Inter-Medium',
+    fontFamily: "Inter-Medium",
     fontSize: 16,
-    color: '#64748b',
+    color: "#64748b",
     marginTop: 4,
   },
   formContainer: {
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     borderRadius: 16,
     padding: 24,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 3,
   },
   title: {
-    fontFamily: 'Inter-Bold',
+    fontFamily: "Inter-Bold",
     fontSize: 24,
-    color: '#0f172a',
+    color: "#0f172a",
     marginBottom: 8,
   },
   subtitle: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: "Inter-Regular",
     fontSize: 14,
-    color: '#64748b',
+    color: "#64748b",
     marginBottom: 24,
   },
   errorContainer: {
-    backgroundColor: '#fee2e2',
+    backgroundColor: "#fee2e2",
     padding: 12,
     borderRadius: 8,
     marginBottom: 16,
   },
   errorText: {
-    fontFamily: 'Inter-Regular',
-    color: '#dc2626',
+    fontFamily: "Inter-Regular",
+    color: "#dc2626",
     fontSize: 14,
   },
   inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderWidth: 1,
-    borderColor: '#d1d5db',
+    borderColor: "#d1d5db",
     borderRadius: 8,
     marginBottom: 16,
     paddingHorizontal: 12,
     height: 48,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   inputIcon: {
     marginRight: 12,
   },
   input: {
     flex: 1,
-    fontFamily: 'Inter-Regular',
+    fontFamily: "Inter-Regular",
     fontSize: 16,
-    color: '#0f172a',
+    color: "#0f172a",
   },
   eyeIcon: {
     padding: 8,
   },
   loginButton: {
-    backgroundColor: '#2563eb',
+    backgroundColor: "#2563eb",
     height: 48,
     borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 8,
   },
   loginButtonText: {
-    color: '#ffffff',
-    fontFamily: 'Inter-Medium',
+    color: "#ffffff",
+    fontFamily: "Inter-Medium",
     fontSize: 16,
   },
   footerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
     marginTop: 24,
   },
   footerText: {
-    fontFamily: 'Inter-Regular',
-    color: '#64748b',
+    fontFamily: "Inter-Regular",
+    color: "#64748b",
     fontSize: 14,
   },
   registerText: {
-    fontFamily: 'Inter-Medium',
-    color: '#2563eb',
+    fontFamily: "Inter-Medium",
+    color: "#2563eb",
     fontSize: 14,
     marginLeft: 4,
   },
