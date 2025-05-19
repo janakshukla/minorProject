@@ -1,14 +1,100 @@
-import { Text, View } from "react-native";
-import "./globals.css"
-import { useUserStore } from "@/store/userstore";
+import { useState, useEffect } from "react";
+import { Text, View, TextInput, Button, Alert, FlatList, ActivityIndicator, TouchableOpacity } from "react-native";
+import axios from "axios";
+import { useRouter } from "expo-router"; // Import useRouter for navigation
+import "./globals.css";
+import { User, useUserStore } from "@/store/userstore";
 
 export default function Home() {
-   const { user } = useUserStore((state) => state);
+  const { user } = useUserStore((state) => state);
+  const [childEmail, setChildEmail] = useState("");
+  const [children, setChildren] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter(); // Initialize router for navigation
+
+  const handleAddChild = async () => {
+    if (!childEmail) {
+      Alert.alert("Error", "Please enter the child's email.");
+      return;
+    }
+
+    try {
+      const response = await axios.post("https://g9ht15nh-3000.inc1.devtunnels.ms/api/child/addchild", {
+        email: childEmail,
+        parentId: user?.id,
+      });
+
+      if (response.status === 200) {
+        Alert.alert("Success", "Child added successfully!");
+        setChildEmail(""); // Clear the input field
+        fetchChildren(); // Refresh the list of children
+      } else {
+        Alert.alert("Error", "Failed to add child. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error adding child:", error);
+      Alert.alert("Error", "An error occurred while adding the child.");
+    }
+  };
+
+  const fetchChildren = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`https://g9ht15nh-3000.inc1.devtunnels.ms/api/child/getallchild/${user?.id}`);
+      setChildren(response.data);
+    } catch (error) {
+      console.error("Error fetching children:", error);
+      Alert.alert("Error", "Failed to fetch children.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchChildren();
+  }, []);
+
+  const handleChildClick = (childId:string) => {
+    router.push(`/child/${childId}`); // Navigate to /child/id
+  };
+
   return (
-    <View
-   className="flex-1 items-center justify-center"
-    >
-      <Text>welcome to home mr {user?.name}  {user?.role}</Text>
+    <View className="flex-1 p-4">
+      <Text>Welcome to home, Mr. {user?.name} ({user?.role})</Text>
+
+      {/* Add Child Section */}
+      <View className="mt-4">
+        <TextInput
+          placeholder="Enter child's email"
+          value={childEmail}
+          onChangeText={setChildEmail}
+          className="border p-2 w-64"
+        />
+        <Button title="Add Child" onPress={handleAddChild} />
+      </View>
+
+      {/* View All Children Section */}
+      <View className="mt-8">
+        <Text className="text-lg font-bold mb-4">Your Children:</Text>
+        {loading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : children.length === 0 ? (
+          <Text>No children found.</Text>
+        ) : (
+          <FlatList
+            data={children}
+            keyExtractor={(item:User) => item.id}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => handleChildClick(item.id)}>
+                <View className="p-4 mb-2 border rounded">
+                  <Text>Name: {item.name}</Text>
+                  <Text>Email: {item.email}</Text>
+                </View>
+              </TouchableOpacity>
+            )}
+          />
+        )}
+      </View>
     </View>
   );
 }

@@ -13,7 +13,7 @@ router.post("/addchild", async (req, res) => {
             email: email,
         },
     });
-    if (!user && user.role !== "child") {
+    if (!user && !user.role && user.role !== "child") {
         return res.status(404).json({ error: "child not found" });
     }
     const parent = await db.user.findUnique({
@@ -71,6 +71,10 @@ router.get("/getlocation/:childId", async (req, res) => {
             where: {
                 childId: childId,
             },
+            orderBy: {
+                createdAt: "desc",
+            },
+            take: 10,
         });
         return res.status(200).json(location);
     } catch (error) {
