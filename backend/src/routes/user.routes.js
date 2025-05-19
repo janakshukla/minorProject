@@ -7,6 +7,7 @@ const router = Router()
 
 router.post("/register", async (req, res) => {
     const { username, email, password, role } = req.body;
+    console.log(req.body);
     if (!username || !email || !password || !role) {
         return res.status(400).json({ message: "Please fill all fields" });
     }
